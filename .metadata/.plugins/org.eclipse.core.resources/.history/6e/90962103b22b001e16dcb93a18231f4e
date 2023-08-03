@@ -1,0 +1,5 @@
+package com.au.credpro.report.controller;
+
+public class AdminController {
+
+}

@@ -1,0 +1,58 @@
+package com.au.credpro.report.service;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.au.credpro.report.entity.QueryList;
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.repository.QueryListRepository;
+import com.au.credpro.report.repository.UserRepository;
+
+@Service
+public class QueryListService {
+
+	@Autowired
+	QueryListRepository queryListRepository;
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	
+	public List<QueryList> getAllQueryLists() {
+        return queryListRepository.findAll();
+    }
+
+    public QueryList getQueryListById(Long queryId) {
+        return queryListRepository.findById(queryId).orElse(null);
+    }
+    
+    public QueryList saveQueryList(QueryList queryList) {
+        return queryListRepository.save(queryList);
+    }
+    
+    
+    public Set<QueryList> getAllQueriesAssignToUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return user.getQueryList();
+    }
+    
+    @Transactional
+    public QueryList updateQuery(Long queryId, QueryList queryList) {
+        QueryList existingQuery = queryListRepository.findById(queryId)
+                .orElseThrow(() -> new EntityNotFoundException("Query not found with ID: " + queryId));
+
+        // Update the query details
+        existingQuery.setQuery(queryList.getQuery());
+        existingQuery.setQueryName(queryList.getQueryName());
+
+        return queryListRepository.save(existingQuery);
+    }
+ 
+    
+}

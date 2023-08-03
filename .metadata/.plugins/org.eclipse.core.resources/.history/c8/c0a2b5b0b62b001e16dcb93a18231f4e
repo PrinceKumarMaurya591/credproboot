@@ -1,0 +1,55 @@
+package com.au.credpro.report.service;
+
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.au.credpro.report.entity.Admin;
+import com.au.credpro.report.entity.QueryList;
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.repository.AdminRepository;
+import com.au.credpro.report.repository.QueryListRepository;
+import com.au.credpro.report.repository.UserRepository;
+
+@Service
+public class AdminService {
+	
+	@Autowired
+	AdminRepository adminRepository;
+	
+	
+	@Autowired
+    private UserRepository userRepository;
+	
+	@Autowired
+	private QueryListRepository queryListRepository;
+
+    
+
+//    public User addUserByAdmin(Long adminId, User user) {
+//        Admin admin = adminRepository.findById(adminId)
+//                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+//        Long getadminId=admin.getId();
+//        System.out.println("getAdminId+---"+getadminId);
+//        user.setAdminId(getadminId); // Set the admin for the user
+//        return userRepository.save(user);
+//    }
+    
+    public User addUserByAdminWithQueries(Long adminId, Long userId, List<Long> queryIds) {
+        Admin admin = adminRepository.findById(adminId)
+                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        List<QueryList> queries = queryListRepository.findAllById(queryIds);
+        user.setAdmin(admin); // Set the admin for the user
+        user.setQueryList(queries); // Set the list of queries for the user
+        return userRepository.save(user);
+    }
+    
+
+}

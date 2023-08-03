@@ -1,0 +1,15 @@
+package com.au.credpro.report.controller;
+
+import java.util.Set;
+
+public class QueryIdsWrapper {
+    private Set<Long> queryIds;
+
+    public Set<Long> getQueryIds() {
+        return queryIds;
+    }
+
+    public void setQueryIds(Set<Long> queryIds) {
+        this.queryIds = queryIds;
+    }
+}

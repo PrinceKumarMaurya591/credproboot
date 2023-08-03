@@ -1,0 +1,42 @@
+package com.au.credpro.report.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.au.credpro.report.entity.Admin;
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.service.AdminService;
+import com.au.credpro.report.service.UserService;
+
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/credpro")
+public class LoginController {
+
+	@Autowired
+	AdminService adminService;
+	
+	@Autowired
+    private UserService userService;
+	
+	
+	 @GetMapping("/checkuseroradmin")
+	    public String checkUserRole(@RequestParam Long userId) {
+		  User user = userService.isUser(userId);
+	        Admin admin = adminService.isAdmin(userId);
+
+	        if (admin != null) {
+	            return "admin";
+	        } else if (user != null) {
+	            return "RegularUser";
+	        } else {
+	            return "User not found.";
+	        }
+	    }
+	
+}

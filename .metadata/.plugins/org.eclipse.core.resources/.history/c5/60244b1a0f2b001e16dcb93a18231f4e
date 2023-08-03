@@ -1,0 +1,5 @@
+package com.au.credpro.report.repository;
+
+public class QueryListRepository {
+
+}

@@ -1,0 +1,53 @@
+package com.au.credpro.report.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.au.credpro.report.entity.QueryList;
+import com.au.credpro.report.service.QueryListService;
+
+@RestController
+@RequestMapping("/api/querylists")
+public class QueryController {
+
+	@Autowired
+	QueryListService queryListService;
+
+	@PostMapping
+	public ResponseEntity<QueryList> addQueryList(@RequestBody QueryList queryList) {
+		QueryList savedQueryList = queryListService.saveQueryList(queryList);
+		return new ResponseEntity<>(savedQueryList, HttpStatus.CREATED);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<QueryList>> getAllQueryLists() {
+		List<QueryList> queryLists = queryListService.getAllQueryLists();
+		return new ResponseEntity<>(queryLists, HttpStatus.OK);
+	}
+
+	@GetMapping("/{queryId}")
+	public ResponseEntity<QueryList> getQueryListById(@PathVariable Long queryId) {
+		QueryList queryList = queryListService.getQueryListById(queryId);
+		if (queryList != null) {
+			return new ResponseEntity<>(queryList, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@GetMapping("/queries/{userId}")
+	public ResponseEntity<List<QueryList>> getAllQueriesForUser(@PathVariable Long userId) {
+		Set<QueryList> queries = queryListService.getAllQueriesAssignToUser(userId);
+		return ResponseEntity.ok(queries);
+	}
+
+}

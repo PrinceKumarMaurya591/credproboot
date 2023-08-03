@@ -1,0 +1,51 @@
+package com.au.credpro.report.service;
+
+import java.util.List;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.au.credpro.report.entity.QueryList;
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.repository.QueryListRepository;
+import com.au.credpro.report.repository.UserRepository;
+
+@Service
+public class UserService {
+
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	QueryListRepository queryListRepository;
+	public User addUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    
+    
+    public void assignQueriesToUser( Long userId, List<Long> queryIds) {
+//      User admin = userRepository.findById(adminId).orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+      User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+      // Check if the authenticated user is an admin
+      // You can implement the logic to check if the user with adminId has admin privileges
+
+      List<QueryList> queries = queryListRepository.findAllById(queryIds);
+      user.getQueryList().addAll(queries);
+      userRepository.save(user);
+  }
+    
+    
+    
+    public User isUser(Long userId) {
+        return userRepository.findById(userId).orElse(null);
+        
+    }
+	
+}

@@ -1,0 +1,115 @@
+package com.au.credpro.report.service;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.au.credpro.report.entity.Admin;
+import com.au.credpro.report.entity.QueryList;
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.repository.AdminRepository;
+import com.au.credpro.report.repository.QueryListRepository;
+import com.au.credpro.report.repository.UserRepository;
+
+@Service
+public class AdminService {
+	
+	@Autowired
+	AdminRepository adminRepository;
+	
+	
+	@Autowired
+    private UserRepository userRepository;
+	
+	@Autowired
+	private QueryListRepository queryListRepository;
+
+    
+
+//    public User addUserByAdmin(Long adminAuId, User user) {
+//        User admin = adminRepository.findByAuAdminId(adminId)
+//                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+//        Long getadminId=admin.getId();
+//        Long getAdminAuId=admin.getAdminAuId();
+//        System.out.println("getAdminId+---"+getadminId);
+//        // Set the admin for the user
+//        user.setAdminId(getadminId);
+//        user.setAdminAuId(getAdminAuId);
+//        return userRepository.save(user);
+//    }
+    
+    public User addUserByAdminAuId(Long adminAuId, User user) {
+        Admin admin = adminRepository.findByAdminAuId(adminAuId);
+        if (admin == null) {
+            throw new RuntimeException("Admin with adminAuId " + adminAuId + " not found.");
+        }
+
+        user.setAdminAuId(adminAuId);
+        user.setAdminId(admin.getId());
+        return userRepository.save(user);
+    }
+    
+    
+    
+//	 public User addUserByAdmin(Long adminId, User user) {
+//	        Admin admin = adminRepository.findById(adminId)
+//	                .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
+//
+//	        // Assign queries to the user
+//	        List<QueryList> queryList = user.getQueryList();
+//	        List<QueryList> assignedQueries = new ArrayList<>();
+//	        for (QueryList query : queryList) {
+//	            QueryList assignedQuery = queryListRepository.findById(query.getQueryId())
+//	                    .orElseThrow(() -> new EntityNotFoundException("Query not found"));
+//	            assignedQueries.add(assignedQuery);
+//	        }
+//	        user.setQueryList(assignedQueries);
+//
+//	        // Save the user
+//	        Long getadminId=admin.getId();
+//	        user.setAdminId(getadminId);
+//	        return userRepository.save(user);
+//	    }
+    
+    public User assignQueriesToUser(Long userId, Set<Long> queryIds) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        Set<QueryList> queries = queryListRepository.findAllById(queryIds)
+                .stream()
+                .collect(Collectors.toSet());
+
+        user.setQueryList(queries);
+        return userRepository.save(user);
+    }
+    
+    
+    public User assignQueriesToUserByAuId(Long userAuId, Set<Long> queryIds) {
+        User user = userRepository.findByUserAuId(userAuId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        Set<QueryList> queries = queryListRepository.findAllById(queryIds)
+                .stream()
+                .collect(Collectors.toSet());
+
+        user.setQueryList(queries);
+        return userRepository.save(user);
+    }
+
+    
+    
+    
+    public Admin isAdmin(Long userAuId) {
+        //return  adminRepository.findById(userAuId).orElse(null);
+    	return adminRepository.findByAdminAuId(userAuId);
+        
+    }
+
+}

@@ -1,0 +1,94 @@
+package com.au.credpro.report.controller;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityNotFoundException;
+
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.au.credpro.report.entity.User;
+import com.au.credpro.report.exception.UnauthorizedException;
+import com.au.credpro.report.service.QueryExecutionService;
+import com.au.credpro.report.service.UserService;
+
+import org.springframework.http.HttpHeaders;
+
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/credpro/user")
+public class QueryExecutionController {
+
+    @Autowired
+    private QueryExecutionService queryExecutionService;
+    @Autowired 
+    private UserService userService;
+
+//    @PostMapping("/{userId}/execute-query/{queryId}")
+//    public ResponseEntity<List<Map<String, Object>>> executeAssignedQuery(
+//            @PathVariable Long userId,
+//            @PathVariable Long queryId) {
+//        List<Map<String, Object>> result = queryExecutionService.executeAssignedQuery(userId, queryId);
+//        return ResponseEntity.ok(result);
+//    }
+    
+//    @GetMapping("/{userId}/execute-query/{queryId}")
+//    public ResponseEntity<byte[]> executeAssignedQueryAndDownloadExcel(
+//            @PathVariable Long userId,
+//            @PathVariable Long queryId) throws IOException {
+//        Workbook workbook = queryExecutionService.executeAssignedQueryAndGetExcel(userId, queryId);
+//
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        workbook.write(byteArrayOutputStream);
+//        workbook.close();
+//
+//        byte[] excelBytes = byteArrayOutputStream.toByteArray();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        headers.setContentDispositionFormData("attachment", "query_result.xlsx");
+//        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+//    }
+    
+    
+    
+    
+    
+	@GetMapping("/{userAuId}/execute-query/{queryId}")
+	public ResponseEntity<?> executeAssignedQueryAndDownloadExcel(@PathVariable Long userAuId, @PathVariable Long queryId)
+			throws IOException, UnauthorizedException {
+		try {
+			User user = userService.getUserByUserAuId(userAuId);
+	        Long userId = user.getUserId();
+			Workbook workbook = queryExecutionService.executeAssignedQueryAndGetExcel(userId, queryId);
+
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			workbook.write(byteArrayOutputStream);
+			workbook.close();
+
+			byte[] excelBytes = byteArrayOutputStream.toByteArray();
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", "query_result.xlsx");
+			return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+		} catch (UnauthorizedException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: " + e.getMessage());
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Query not found: " + e.getMessage());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Internal server error: " + e.getMessage());
+		}
+	}
+}

@@ -1,0 +1,16 @@
+package com.au.credpro.report;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CredProReportApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CredProReportApplication.class, args);
+	}
+
+	
+	
+	
+}

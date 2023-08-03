@@ -1,0 +1,45 @@
+package com.au.credpro.report.entity;
+
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Data
+@Getter
+@Setter
+public class QueryList {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long queryId;
+
+	@Column(nullable = false, unique = true)
+	private String query;
+
+	@Column(nullable = false)
+	private String queryName;
+	
+	
+
+	@Override
+	public String toString() {
+		return "QueryList [queryId=" + queryId + ", query=" + query + ", queryName=" + queryName + "]";
+	}
+
+
+
+	@ManyToMany(mappedBy = "queryList", cascade = CascadeType.ALL)
+	private Set<User> user;
+
+}

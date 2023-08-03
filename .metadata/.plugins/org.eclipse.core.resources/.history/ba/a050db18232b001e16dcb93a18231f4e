@@ -1,0 +1,5 @@
+package com.au.credpro.report.service;
+
+public class QueryExecutionService {
+
+}
