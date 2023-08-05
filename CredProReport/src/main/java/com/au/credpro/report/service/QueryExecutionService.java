@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.au.credpro.report.confguration.DatabaseProperties;
 import com.au.credpro.report.entity.QueryList;
 import com.au.credpro.report.entity.User;
 import com.au.credpro.report.exception.UnauthorizedException;
@@ -36,16 +37,21 @@ public class QueryExecutionService {
     @Autowired
     private QueryListRepository queryListRepository;
     
+    @Autowired
+    private DatabaseProperties databaseProperties;
  
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/credproreportdata";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "root";
+//    private static final String DB_URL = "jdbc:mysql://localhost:3306/credproreportdata";
+//    private static final String DB_USER = "root";
+//    private static final String DB_PASSWORD = "root";
 
     
     // Assuming you have a method to connect to database1 and execute the given query
     // Replace this method with the actual logic to connect to database1 and execute the query
     private List<Map<String, Object>> executeQueryOnDatabase1(String query) {
+    	String dbUrl = databaseProperties.getUrl();
+        String dbUser = databaseProperties.getUsername();
+        String dbPassword = databaseProperties.getPassword();
         // Implement the logic to connect to database1 and execute the query
         // Return the result as a List<Map<String, Object>> where each map represents a row of data
         // with column names as keys and corresponding values
@@ -53,8 +59,8 @@ public class QueryExecutionService {
         // For simplicity, let's assume you have implemented this method
         // and the return type is List<Map<String, Object>>
     	List<Map<String, Object>> resultList = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-        		 
+//        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    	 try (Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         		
         		Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query)) {
