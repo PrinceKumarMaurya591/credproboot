@@ -4,8 +4,8 @@ import java.util.Set;
 
 public class QueryIdsWrapper {
 	private Long userAuId;
-	
-    public Long getUserAuId() {
+
+	public Long getUserAuId() {
 		return userAuId;
 	}
 
@@ -15,11 +15,11 @@ public class QueryIdsWrapper {
 
 	private Set<Long> queryIds;
 
-    public Set<Long> getQueryIds() {
-        return queryIds;
-    }
+	public Set<Long> getQueryIds() {
+		return queryIds;
+	}
 
-    public void setQueryIds(Set<Long> queryIds) {
-        this.queryIds = queryIds;
-    }
+	public void setQueryIds(Set<Long> queryIds) {
+		this.queryIds = queryIds;
+	}
 }

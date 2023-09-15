@@ -1,5 +1,6 @@
 package com.au.credpro.report.entity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -9,118 +10,76 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 @Entity
-
+@Table(name = "users") 
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
-	private String username;
-	private String password;
-    private Long adminAuId;
-    private Long adminId;
-    
-    
-    
-	public Long getAdminId() {
-		return adminId;
-	}
-
-
-	public void setAdminId(Long adminId) {
-		this.adminId = adminId;
-	}
-
-
-	@Column(nullable = false, unique = true)
-	private String AuEmail;
-	
-	@Column(nullable = false, unique = true)
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	private Long userId; 
+	// @Column(nullable = false)
+	private String username; 
+	// @Column(nullable = false) 
+	private String password; 
+	// @Column(nullable = false, unique = true) 
+	private String auEmail; 
+	// @Column(nullable = false)
+	private Boolean isAdmin; 
+	// @Column(nullable = false) 
+	private Boolean isActiveUser; 
+	// @Column(nullable = false, unique = true)
 	private Long userAuId;
-	
-	
-    
-public String getAuEmail() {
-		return AuEmail;
-	}
 
+	public String getAuEmail() {
+		return auEmail;
+	}
 
 	public void setAuEmail(String auEmail) {
-		AuEmail = auEmail;
+		this.auEmail = auEmail;
 	}
-
 
 	public Long getUserAuId() {
 		return userAuId;
 	}
 
-
 	public void setUserAuId(Long userAuId) {
 		this.userAuId = userAuId;
 	}
 
-
-	//	@Override
-//	public String toString() {
-//		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", adminId=" + adminId
-//				+ "]";
-//	}
-//	@Override
-//	public String toString() {
-//		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", adminAuId=" + adminAuId
-//				+ ", AuEmail=" + AuEmail + ", userAuId=" + userAuId + "]";
-//	}
-	
-	
-	
-
-	public Long getAdminAuId() {
-		return adminAuId;
-	}
-
-
-
+	public User() { 
+		super(); 
+	// TODO Auto-generated constructor stub 
+		}
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", adminAuId="
-				+ adminAuId + ", adminId=" + adminId + ", AuEmail=" + AuEmail + ", userAuId=" + userAuId + "]";
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", AuEmail=" + auEmail
+				+ ", isAdmin=" + isAdmin + ", isActiveUser=" + isActiveUser + ", userAuId=" + userAuId + ", queryList="
+				+ queryList + "]";
 	}
 
-
-	public void setAdminAuId(Long adminAuId) {
-		this.adminAuId = adminAuId;
-	}
-
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-
-	public User(Long userId, String username, String password, Long adminAuId, String auEmail, Long userAuId,
-			Set<QueryList> queryList) {
+	public User(Long userId, String username, String password, String auEmail, Boolean isAdmin, Boolean isActiveUser,
+			Long userAuId, Set<QueryList> queryList) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.password = password;
-		this.adminAuId = adminAuId;
-		this.AuEmail = auEmail;
+		this.auEmail = auEmail;
+		this.isAdmin = isAdmin;
+		this.isActiveUser = isActiveUser;
 		this.userAuId = userAuId;
 		this.queryList = queryList;
 	}
-
-
-//	public User(Long userId, String username, String password,Set<QueryList> queryList) {
-//		super();
-//		this.userId = userId;
-//		this.username = username;
-//		this.password = password;
-//		this.queryList=queryList;
-//	}
 
 	public Long getUserId() {
 		return userId;
@@ -146,8 +105,23 @@ public String getAuEmail() {
 		this.password = password;
 	}
 
-	
-	 @JsonIgnore
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public Boolean getIsActiveUser() {
+		return isActiveUser;
+	}
+
+	public void setIsActiveUser(Boolean isActiveUser) {
+		this.isActiveUser = isActiveUser;
+	}
+
+	@JsonIgnore
 	@ManyToMany
 	private Set<QueryList> queryList;
 
@@ -155,11 +129,16 @@ public String getAuEmail() {
 		return queryList;
 	}
 
-	public void setQueryList(Set<QueryList> assignedQueries) {
-		this.queryList = assignedQueries;
+	public void setQueryList(Set<QueryList> assignedQueries) { this.queryList = assignedQueries;
+	
 	}
 
 	
 	
+	
+	
+	
 
+	
+	
 }
