@@ -1,0 +1,24 @@
+name: CI/CD for Spring Boot
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11' # or '8' or '16', depending on your project's Java version
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      # Add more steps for testing, code analysis, etc. as needed
