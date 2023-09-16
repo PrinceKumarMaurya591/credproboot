@@ -20,5 +20,7 @@ public class SSEController {
                         .event("sse-event")
                         .data("SSE Event #" + sequence)
                         .build());
+        //nothing
+        
     }
 }
